@@ -1,0 +1,203 @@
+
+spring:
+  profiles:
+    active:
+    # - dbDev
+    - dbDev2
+    - dbDev3
+    - dblocal
+    - redislocal
+   # - elasticlocal
+    - kafkalocal
+
+    
+  application:
+    name: luna-admin
+  jackson:
+    default-property-inclusion: NON_NULL
+  thymeleaf:
+    check-template-location: false
+    prefix: classpath:/templates/ 
+
+
+spring.main.allow-bean-definition-overriding: true 
+---
+spring:
+  profiles: dblocal
+  
+  data:
+    mongodb:
+      authentication-database: admin
+      uri: mongodb://localhost:27017/studydb
+---
+
+spring:
+  profiles: dbDev
+  test:
+    datasource:
+      #url: jdbc:mysql://localhost:3306/studydb?&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false #쓰기 DB
+      url: jdbc:mysql://production-rds-admin.cluster-cghtjgokrsze.ap-northeast-2.rds.amazonaws.com:56375/db_admin?&autoReconnect=true&serverTimezone=UTC&characterEncoding=UTF-8
+      username: admin-base  
+      password: lunaAdminBase201906!
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      dbcp2:
+        validation-query: SELECT 1
+      hikari:      
+        maximum-pool-size: 10
+        #minimum-idle: 100
+        max-lifetime: 60000 #1800000
+        connection-timeout: 30000 #30000
+        validation-timeout: 5000
+        #connection-test-query: SELECT 1      
+        data-source-properties: 
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+          
+  jpa:  
+    show-sql: false
+    #database-platform: org.hibernate.dialect.MySQL5Dialect    
+    hibernate:    
+      ddl-auto: none #create 로 해놓으면 Data전체 삭제 됨. 개발 초기에는 update 사용하나 상용에는 none 필수.
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+---
+
+spring:
+  profiles: dbDev2
+  test2:
+    datasource:
+      #url: jdbc:mysql://localhost:3306/studydb?&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false #쓰기 DB
+      url: jdbc:mysql://production-rds-mall.cluster-cghtjgokrsze.ap-northeast-2.rds.amazonaws.com:56375/db_mall?&autoReconnect=true&serverTimezone=UTC&characterEncoding=UTF-8
+      username: admin-mall  
+      password: lunaAdminMall201906!
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      dbcp2:
+        validation-query: SELECT 1
+      hikari:      
+        maximum-pool-size: 10
+        #minimum-idle: 100
+        max-lifetime: 60000 #1800000
+        connection-timeout: 30000 #30000
+        validation-timeout: 5000
+        #connection-test-query: SELECT 1      
+        data-source-properties: 
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+          
+  jpa:  
+    show-sql: false
+    #database-platform: org.hibernate.dialect.MySQL5Dialect    
+    hibernate:    
+      ddl-auto: none #create 로 해놓으면 Data전체 삭제 됨. 개발 초기에는 update 사용하나 상용에는 none 필수.
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+---
+
+spring:
+  profiles: dbDev3
+  test3:
+    datasource:
+      #url: jdbc:mysql://localhost:3306/studydb?&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false #쓰기 DB
+      url: jdbc:mysql://localhost:3306/studydb?&autoReconnect=true&serverTimezone=UTC&characterEncoding=UTF-8
+      username: root  
+      password: 123456
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      dbcp2:
+        validation-query: SELECT 1
+      hikari:      
+        maximum-pool-size: 10
+        #minimum-idle: 100
+        max-lifetime: 60000 #1800000
+        connection-timeout: 30000 #30000
+        validation-timeout: 5000
+        #connection-test-query: SELECT 1      
+        data-source-properties: 
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+          
+  jpa:  
+    show-sql: false
+    #database-platform: org.hibernate.dialect.MySQL5Dialect    
+    hibernate:    
+      ddl-auto: none #create 로 해놓으면 Data전체 삭제 됨. 개발 초기에는 update 사용하나 상용에는 none 필수.
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+---
+
+spring:
+  profiles: tomcatlocal
+
+server:
+  port: 8080
+        
+  tomcat:
+    accesslog:
+      enabled: true
+      prefix: access_log_ladmin-api
+      pattern: "[%A] [%v] [%{yyyy-MM-dd HH:mm:ss}t]  [%a] [%h] [%S] [accesslog] [%m] [%r] [%{User-Agent}i]"
+    basedir: /Users/kimjimin/logs
+
+---
+spring:
+  profiles: tomcatReal
+
+server:
+  port: 80
+        
+  tomcat:
+    accesslog:
+      enabled: true
+      prefix: access_log_ladmin-api
+      pattern: "[%A] [%v] [%{yyyy-MM-dd HH:mm:ss}t]  [%a] [%h] [%S] [accesslog] [%m] [%r] [%{User-Agent}i]"
+    basedir: /tomcat/
+
+---
+spring:
+  profiles: redislocal    
+  redis:
+    #host: dev-redis.eehi9l.0001.apn2.cache.amazonaws.com
+    host: 127.0.0.1
+    port: 6379
+    timeout: 600
+    database: 0
+ 
+---
+ spring:
+  profiles: elasticlocal
+  elasticsearch:
+    clusterName: luna-lms
+    #clusterName: my-application
+    #host: 172.31.17.238
+    host: 127.0.0.1
+    port: 9300
+    #resthost: 172.31.17.238
+    resthost: 127.0.0.1
+    restport: 9200
+    
+---
+spring:
+  profiles: kafkalocal
+  kafka:
+    bootstrap-servers:
+      #- 192.168.10.62:9092
+      - localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    consumer:
+      group-id: apitest2
+      auto-offset-reset: latest # latest - 토픽의 가장 마지막 부터 메시지를 가져옴, earliest - 처음부터 메시지를 가져옴
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      client-id: study-client-brian
